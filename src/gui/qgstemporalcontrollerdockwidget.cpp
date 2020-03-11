@@ -107,7 +107,6 @@ QgsTemporalControllerDockWidget::QgsTemporalControllerDockWidget( const QString 
   mStopButton->setToolTip( tr( "Pause" ) );
   mRewindButton->setToolTip( tr( "Rewind to start" ) );
   mFastForwardButton->setToolTip( tr( "Fast forward to end" ) );
-
   updateFrameDuration();
 
   connect( QgsProject::instance(), &QgsProject::readProject, this, &QgsTemporalControllerDockWidget::setWidgetStateFromProject );

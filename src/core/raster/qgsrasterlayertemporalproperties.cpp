@@ -49,6 +49,9 @@ void QgsRasterLayerTemporalProperties::setIntervalHandlingMethod( QgsRasterDataP
 
 void  QgsRasterLayerTemporalProperties::setFixedTemporalRange( const QgsDateTimeRange &range )
 {
+  if ( !isActive() )
+    setIsActive( true );
+
   mFixedRange = range;
 }
 

@@ -56,6 +56,9 @@ void QgsRasterLayerTemporalPropertiesWidget::init()
   if ( mLayer->temporalProperties()->temporalSource() == QgsMapLayerTemporalProperties::TemporalSource::Project )
     mProjectRadioButton->setChecked( true );
 
+  if ( mLayer->temporalProperties()->temporalSource() ==
+       QgsMapLayerTemporalProperties::TemporalSource::Project )
+    mProjectRadioButton->setChecked( true );
   updateRangeLabel( mLabel );
 
   mSetEndAsStartNormalButton->setToolTip( tr( "Set the end datetime same as the start datetime" ) );

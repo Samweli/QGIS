@@ -1266,11 +1266,17 @@ void QgsRasterLayerProperties::updateSourceStaticTime()
     if ( mProjectTemporalRange->isChecked() )
     {
       QgsDateTimeRange range;
+      const QgsDateTimeRange availableProviderRange = mRasterLayer->dataProvider()->temporalCapabilities()->availableTemporalRange();
 
       if ( QgsProject::instance()->timeSettings() )
         range = QgsProject::instance()->timeSettings()->temporalRange();
       if ( range.begin().isValid() && range.end().isValid() )
       {
+        if ( availableProviderRange.begin().isValid() &&
+             availableProviderRange.end().isValid() &&
+             !availableProviderRange.contains( range ) )
+          range = availableProviderRange;
+
         QString time = range.begin().toString( Qt::ISODateWithMs ) + '/' +
                        range.end().toString( Qt::ISODateWithMs );
 

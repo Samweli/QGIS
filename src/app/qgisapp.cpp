@@ -11077,8 +11077,20 @@ void QgisApp::projectTemporalRangeChanged()
            uri.value( QStringLiteral( "temporalSource" ) ).toString() == QStringLiteral( "project" ) )
       {
         QgsDateTimeRange range = QgsProject::instance()->timeSettings()->temporalRange();
+//        QgsDateTimeRange availableProviderRange;
+
+//        if ( currentLayer->dataProvider()->temporalCapabilities() )
+//            availableProviderRange = currentLayer->dataProvider()->temporalCapabilities()->availableTemporalRange();
+
         if ( range.begin().isValid() && range.end().isValid() )
         {
+          // Don't update the layer static temporal range if the project range
+          // is out of the limits of the layers temporal capabilities range
+//           if ( availableProviderRange.begin().isValid() &&
+//                 availableProviderRange.end().isValid() &&
+//                 !availableProviderRange.contains( range ) )
+//               continue;
+
           QString time = range.begin().toString( Qt::ISODateWithMs ) + '/' +
                          range.end().toString( Qt::ISODateWithMs );
 

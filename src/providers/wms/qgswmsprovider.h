@@ -206,7 +206,8 @@ class QgsWmsProvider final: public QgsRasterDataProvider
     Qgis::DataType sourceDataType( int bandNo ) const override;
     int bandCount() const override;
     QString htmlMetadata() override;
-    QgsRasterIdentifyResult identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox = QgsRectangle(), int width = 0, int height = 0, int dpi = 96 ) override;
+    QgsRasterIdentifyResult identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox = QgsRectangle(), const QgsDateTimeRange &temporalRange = QgsDateTimeRange(), int width = 0, int height = 0, int dpi = 96 ) override;
+
     QString lastErrorTitle() override;
     QString lastError() override;
     QString lastErrorFormat() override;
@@ -348,7 +349,7 @@ class QgsWmsProvider final: public QgsRasterDataProvider
       *
       * \since QGIS 3.14
       */
-    void addWmstParameters( QUrlQuery &query );
+    void addWmstParameters( QUrlQuery &query, QgsDateTimeRange &range );
 
     //! Helper structure to store a cached tile image with its rectangle
     typedef struct TileImage

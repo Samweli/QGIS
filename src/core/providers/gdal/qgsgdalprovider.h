@@ -131,6 +131,7 @@ class QgsGdalProvider final: public QgsRasterDataProvider, QgsGdalProviderBase
     QgsRectangle extent() const override;
     bool isValid() const override;
     QgsRasterIdentifyResult identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox = QgsRectangle(), int width = 0, int height = 0, int dpi = 96 ) override;
+    QgsRasterIdentifyResult identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox = QgsRectangle(), const QgsDateTimeRange &temporalRange = QgsDateTimeRange(), int width = 0, int height = 0, int dpi = 96 );
     double sample( const QgsPointXY &point, int band, bool *ok = nullptr, const QgsRectangle &boundingBox = QgsRectangle(), int width = 0, int height = 0, int dpi = 96 ) override;
     QString lastErrorTitle() override;
     QString lastError() override;

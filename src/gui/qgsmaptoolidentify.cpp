@@ -889,6 +889,8 @@ bool QgsMapToolIdentify::identifyRasterLayer( QList<IdentifyResult> *results, Qg
   if ( !layer->extent().contains( point ) )
     return false;
 
+  const QgsDateTimeRange &temporalRange = mCanvas->temporalRange();
+
   QMap< QString, QString > attributes, derivedAttributes;
 
   QgsRaster::IdentifyFormat format = QgsRasterDataProvider::identifyFormatFromName( layer->customProperty( QStringLiteral( "identify/format" ) ).toString() );
@@ -921,7 +923,7 @@ bool QgsMapToolIdentify::identifyRasterLayer( QList<IdentifyResult> *results, Qg
     r = toLayerCoordinates( layer, r ); // will be a bit larger
     // Mapserver (6.0.3, for example) does not work with 1x1 pixel box
     // but that is fixed (the rect is enlarged) in the WMS provider
-    identifyResult = dprovider->identify( point, format, r, 1, 1 );
+    identifyResult = dprovider->identify( point, format, r, temporalRange, 1, 1 );
   }
   else
   {
@@ -944,7 +946,7 @@ bool QgsMapToolIdentify::identifyRasterLayer( QList<IdentifyResult> *results, Qg
     QgsDebugMsg( QStringLiteral( "width = %1 height = %2" ).arg( width ).arg( height ) );
     QgsDebugMsg( QStringLiteral( "xRes = %1 yRes = %2 mapUnitsPerPixel = %3" ).arg( viewExtent.width() / width ).arg( viewExtent.height() / height ).arg( mapUnitsPerPixel ) );
 
-    identifyResult = dprovider->identify( point, format, viewExtent, width, height );
+    identifyResult = dprovider->identify( point, format, viewExtent, temporalRange, width, height );
   }
 
   derivedAttributes.unite( derivedAttributesForPoint( QgsPoint( pointInCanvasCrs ) ) );

@@ -313,6 +313,12 @@ QgsRasterIdentifyResult QgsRasterDataProvider::identify( const QgsPointXY &point
   return QgsRasterIdentifyResult( QgsRaster::IdentifyFormatValue, results );
 }
 
+QgsRasterIdentifyResult QgsRasterDataProvider::identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox, const QgsDateTimeRange &temporalRange, int width, int height, int /*dpi*/ )
+{
+  Q_UNUSED( temporalRange )
+  return identify( point, format, boundingBox, width, height );
+}
+
 double QgsRasterDataProvider::sample( const QgsPointXY &point, int band,
                                       bool *ok, const QgsRectangle &boundingBox, int width, int height, int dpi )
 {

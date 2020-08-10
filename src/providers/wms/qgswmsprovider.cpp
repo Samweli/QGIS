@@ -1070,7 +1070,8 @@ QUrl QgsWmsProvider::createRequestUrlWMS( const QgsRectangle &viewExtent, int pi
   if ( temporalCapabilities() &&
        temporalCapabilities()->hasTemporalCapabilities() )
   {
-    addWmstParameters( query );
+    QgsDateTimeRange range = temporalCapabilities()->requestedTemporalRange();
+    addWmstParameters( query, range );
   }
 
   setFormatQueryItem( query );
@@ -1099,10 +1100,8 @@ QUrl QgsWmsProvider::createRequestUrlWMS( const QgsRectangle &viewExtent, int pi
   return url;
 }
 
-void QgsWmsProvider::addWmstParameters( QUrlQuery &query )
+void QgsWmsProvider::addWmstParameters( QUrlQuery &query, QgsDateTimeRange &range )
 {
-  QgsDateTimeRange range = temporalCapabilities()->requestedTemporalRange();
-
   QString format { QStringLiteral( "yyyy-MM-ddThh:mm:ssZ" ) };
   bool dateOnly = false;
 
@@ -2741,7 +2740,7 @@ QString QgsWmsProvider::htmlMetadata()
   return metadata;
 }
 
-QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox, int width, int height, int /*dpi*/ )
+QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox, const QgsDateTimeRange &temporalRange, int width, int height, int /*dpi*/ )
 {
   QgsDebugMsg( QStringLiteral( "format = %1" ).arg( format ) );
 
@@ -2930,11 +2929,17 @@ QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPointXY &point, QgsRa
         setQueryItem( query, QStringLiteral( "FEATURE_COUNT" ), QString::number( mSettings.mFeatureCount ) );
       }
 
+
       // For WMS-T layers
       if ( temporalCapabilities() &&
            temporalCapabilities()->hasTemporalCapabilities() )
       {
-        addWmstParameters( query );
+        QgsDateTimeRange range = temporalCapabilities()->requestedTemporalRange();
+
+        if ( !temporalRange.isInfinite() )
+          range = temporalRange;
+
+        addWmstParameters( query, range );
       }
 
       requestUrl.setQuery( query );

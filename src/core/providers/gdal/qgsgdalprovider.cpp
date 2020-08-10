@@ -1407,6 +1407,13 @@ QgsRasterIdentifyResult QgsGdalProvider::identify( const QgsPointXY &point, QgsR
   return QgsRasterIdentifyResult( QgsRaster::IdentifyFormatValue, results );
 }
 
+QgsRasterIdentifyResult QgsGdalProvider::identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox, const QgsDateTimeRange &temporalRange, int width, int height, int /*dpi*/ )
+{
+  Q_UNUSED( temporalRange )
+  return identify( point, format, boundingBox, width, height );
+}
+
+
 bool QgsGdalProvider::worldToPixel( double x, double y, int &col, int &row ) const
 {
   /*

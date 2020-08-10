@@ -375,6 +375,30 @@ class CORE_EXPORT QgsRasterDataProvider : public QgsDataProvider, public QgsRast
     virtual QgsRasterIdentifyResult identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox = QgsRectangle(), int width = 0, int height = 0, int dpi = 96 );
 
     /**
+     * Identify raster value(s) found on the point position. Includes passing
+     * temporal range parameter in order to identify the point values on a
+     * specific time for temporal raster data.
+     *
+     * \param point coordinates in data source CRS
+     * \param format result format
+     * \param boundingBox context bounding box
+     * \param temporalRange temporal range of the canvas
+     * \param width context width
+     * \param height context height
+     * \param dpi context dpi
+     * \return QgsRaster::IdentifyFormatValue: map of values for each band, keys are band numbers
+     *         (from 1).
+     *         QgsRaster::IdentifyFormatFeature: map of QgsRasterFeatureList for each sublayer
+     *         QgsRaster::IdentifyFormatHtml: map of HTML strings for each sublayer (WMS).
+     *         Empty if failed or there are no results.
+     * \note The arbitraryness of the returned document is enforced by WMS standards
+     *       up to at least v1.3.0
+     * \see sample(), which is much more efficient for simple "value at point" queries.
+     * \since QGIS 3.16
+     */
+    virtual QgsRasterIdentifyResult identify( const QgsPointXY &point, QgsRaster::IdentifyFormat format, const QgsRectangle &boundingBox = QgsRectangle(), const QgsDateTimeRange &temporalRange = QgsDateTimeRange(), int width = 0, int height = 0, int dpi = 96 );
+
+    /**
      * Samples a raster value from the specified \a band found at the \a point position. The context
      * parameters \a boundingBox, \a width and \a height are important to identify
      * on the same zoom level as a displayed map and to do effective

@@ -20,6 +20,10 @@
 
 #include "qgscolorrampshader.h"
 
+class QgsVectorLayer;
+
+class QgsVatFieldsSelectionDialog;
+
 /**
  * \ingroup core
   * Utility functions for raster renderers.
@@ -51,6 +55,18 @@ class CORE_EXPORT QgsRasterRendererUtils
      * \see parseColorMapFile()
      */
     static bool saveColorMapFile( const QString &path, const QList<QgsColorRampShader::ColorRampItem> &items, QgsColorRampShader::Type type );
+
+    /**
+     * Parses an exported color map file at the specified \a path and extracts the stored color ramp \a items
+     * and ramp shader \a type.
+     *
+     * Returns TRUE if the parsing was successful. If not, a list of \a errors will be generated.
+     *
+     * \see saveColorMapFile()
+     */
+    static bool parseVatFile( const QString &path, QgsVectorLayer *layer, QMap<QString, QString> fields, QList<QgsColorRampShader::ColorRampItem> &items SIP_OUT,
+                                   QgsColorRampShader::Type &type SIP_OUT,
+                                   QStringList &errors SIP_OUT );
 };
 
 #endif // QGSRASTERRENDERERUTILS_H

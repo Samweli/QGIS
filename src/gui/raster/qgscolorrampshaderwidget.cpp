@@ -31,6 +31,8 @@
 #include "qgscolordialog.h"
 #include "qgsrasterrendererutils.h"
 #include "qgsfileutils.h"
+#include "qgsvatfieldsselectiondialog.h"
+#include "qgsvectorlayer.h"
 
 #include <QCursor>
 #include <QPushButton>
@@ -53,6 +55,7 @@ QgsColorRampShaderWidget::QgsColorRampShaderWidget( QWidget *parent )
   connect( mDeleteEntryButton, &QPushButton::clicked, this, &QgsColorRampShaderWidget::mDeleteEntryButton_clicked );
   connect( mLoadFromBandButton, &QPushButton::clicked, this, &QgsColorRampShaderWidget::mLoadFromBandButton_clicked );
   connect( mLoadFromFileButton, &QPushButton::clicked, this, &QgsColorRampShaderWidget::mLoadFromFileButton_clicked );
+  connect( mLoadFromVatFileButton, &QPushButton::clicked, this, &QgsColorRampShaderWidget::mLoadFromVatButton_clicked );
   connect( mExportToFileButton, &QPushButton::clicked, this, &QgsColorRampShaderWidget::mExportToFileButton_clicked );
   connect( mUnitLineEdit, &QLineEdit::textEdited, this, &QgsColorRampShaderWidget::mUnitLineEdit_textEdited );
   connect( mColormapTreeWidget, &QTreeWidget::itemDoubleClicked, this, &QgsColorRampShaderWidget::mColormapTreeWidget_itemDoubleClicked );
@@ -482,6 +485,61 @@ void QgsColorRampShaderWidget::mLoadFromFileButton_clicked()
 
   QFileInfo fileInfo( fileName );
   settings.setValue( QStringLiteral( "lastColorMapDir" ), fileInfo.absoluteDir().absolutePath() );
+
+  loadMinimumMaximumFromTree();
+  emit widgetChanged();
+}
+
+void QgsColorRampShaderWidget::mLoadFromVatButton_clicked()
+{
+  QgsSettings settings;
+  QString lastDir = settings.value( QStringLiteral( "lastVatDir" ), QDir::homePath() ).toString();
+  const QString fileName = QFileDialog::getOpenFileName( this, tr( "Load Color Map from Vat File" ), lastDir, tr( "Vat file (*.vat.dbf)" ) );
+  if ( fileName.isEmpty() )
+    return;
+
+  QList<QgsColorRampShader::ColorRampItem> colorRampItems;
+  QgsColorRampShader::Type type = QgsColorRampShader::Interpolated;
+  QStringList errors;
+
+  QgsVectorLayer *dbfLayer = new QgsVectorLayer( fileName );
+  if ( !dbfLayer )
+  {
+    return;
+  }
+
+  QgsVatFieldsSelectionDialog::Fields fields = QgsVatFieldsSelectionDialog::run(dbfLayer, this, tr( "Select fields" ) );
+  QMap<QString, QString> map;
+  map[ QStringLiteral("Value") ] = fields.valueField;
+  map[ QStringLiteral("Red") ] = fields.redField;
+  map[ QStringLiteral("Green") ] = fields.greenField;
+  map[ QStringLiteral("Blue") ] = fields.blueField;
+  map[ QStringLiteral("Alpha") ] = fields.alphaField;
+  map[ QStringLiteral("Label") ] = fields.labelField;
+
+
+  if ( QgsRasterRendererUtils::parseVatFile( fileName, dbfLayer, map, colorRampItems, type, errors ) )
+  {
+    //clear the current tree
+    mColormapTreeWidget->clear();
+
+    mColorInterpolationComboBox->setCurrentIndex( mColorInterpolationComboBox->findData( type ) );
+
+    populateColormapTreeWidget( colorRampItems );
+
+    if ( !errors.empty() )
+    {
+      QMessageBox::warning( this, tr( "Load Color Map from File" ), tr( "The following lines contained errors\n\n" ) +  errors.join( '\n' ) );
+    }
+  }
+  else
+  {
+    const QString error = tr( "An error occurred while reading the color map\n\n" ) + errors.join( '\n' );
+    QMessageBox::warning( this, tr( "Load Color Map from File" ), error );
+  }
+
+  QFileInfo fileInfo( fileName );
+  settings.setValue( QStringLiteral( "lastVatDir" ), fileInfo.absoluteDir().absolutePath() );
 
   loadMinimumMaximumFromTree();
   emit widgetChanged();

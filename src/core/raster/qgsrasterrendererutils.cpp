@@ -20,6 +20,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegularExpression>
+#include "qgsvectorlayer.h"
+#include "qgsattributetableconfig.h"
 
 bool QgsRasterRendererUtils::parseColorMapFile( const QString &path, QList<QgsColorRampShader::ColorRampItem> &items, QgsColorRampShader::Type &type, QStringList &errors )
 {
@@ -138,4 +140,36 @@ bool QgsRasterRendererUtils::saveColorMapFile( const QString &path, const QList<
     return false;
   }
 }
+
+bool QgsRasterRendererUtils::parseVatFile( const QString &path, QgsVectorLayer *layer, QMap<QString, QString> fields, QList<QgsColorRampShader::ColorRampItem> &items, QgsColorRampShader::Type &type, QStringList &errors )
+{
+    QFile inputFile( path );
+    if ( !inputFile.open( QFile::ReadOnly ) )
+    {
+      errors.append( QObject::tr( "Read access denied. Adjust the file permissions and try again.\n\n" ) );
+      return false;
+    }
+
+    bool res = true;
+
+
+    QgsFeatureIterator it = layer->getFeatures();
+    QgsFeature feature;
+
+    while (it.nextFeature(feature)) {
+        QVariant value = feature.attribute( fields[QStringLiteral("Value")] );
+        QVariant red = feature.attribute( fields[QStringLiteral("Red")] );
+        QVariant green = feature.attribute( fields[QStringLiteral("Green")] );
+        QVariant blue = feature.attribute( fields[QStringLiteral("Blue")] );
+        QVariant label = feature.attribute( fields[QStringLiteral("Label")] );
+
+        QgsColorRampShader::ColorRampItem currentItem( value.toDouble(),
+            QColor::fromRgb( red.toInt(), green.toInt(), blue.toInt()),
+            label.toString() );
+        items.push_back( currentItem );
+    }
+
+    return res;
+}
+
 

@@ -134,6 +134,7 @@ class GUI_EXPORT QgsColorRampShaderWidget: public QWidget, protected Ui::QgsColo
     void mDeleteEntryButton_clicked();
     void mLoadFromBandButton_clicked();
     void mLoadFromFileButton_clicked();
+    void mLoadFromVatButton_clicked();
     void mExportToFileButton_clicked();
     void mUnitLineEdit_textEdited( const QString &text ) { Q_UNUSED( text ) autoLabel(); }
     void mColormapTreeWidget_itemDoubleClicked( QTreeWidgetItem *item, int column );

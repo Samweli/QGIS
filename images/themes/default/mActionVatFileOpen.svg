@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   height="32"
+   width="32"
+   version="1.1"
+   id="svg66">
+  <metadata
+     id="metadata72">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs70">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1142">
+      <rect
+         style="fill:#0000ff;fill-rule:evenodd;stroke-width:1.67429"
+         id="rect1144"
+         width="20.214149"
+         height="14.464355"
+         x="-0.8931604"
+         y="12.967611"
+         transform="matrix(0.99995714,0.00925819,-0.00778462,0.9999697,0,0)" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1148">
+      <rect
+         style="fill:#0000ff;fill-rule:evenodd;stroke-width:1.67429"
+         id="rect1150"
+         width="20.43527"
+         height="14.0686"
+         x="-0.36278772"
+         y="12.618993"
+         transform="matrix(0.99995714,0.00925819,-0.00778462,0.9999697,0,0)" />
+    </clipPath>
+  </defs>
+  <g
+     fill="#fcd94f"
+     stroke="#b29a37"
+     stroke-linejoin="round"
+     transform="translate(0 -1020.3622)"
+     id="g64">
+    <path
+       d="m1.5 1047.3622c0-8 0-15.5 0-22.5h9v3h16v19.5z"
+       id="path60" />
+    <path
+       d="m1.5 1047.3622 4-16h25l-4 16z"
+       stroke-linecap="round"
+       id="path62" />
+  </g>
+  <g
+     transform="matrix(0.80489495,-0.00410313,0.00626599,0.44317017,15.090486,-1.2958418)"
+     id="g1044">
+    <path
+       d="m 0.5,19.5 h 17 v 12 h -17 z"
+       fill="#e6e6e6"
+       stroke="#6e97c4"
+       id="path998"
+       clip-path="url(#clipPath1148)" />
+    <path
+       d="m 0.5,14.5 h 17 v 5 h -17 z"
+       fill="#bad9ec"
+       stroke="#6e97c4"
+       id="path1000" />
+    <path
+       d="M 2,17 H 5"
+       fill="#efef99"
+       fill-rule="evenodd"
+       stroke="#f8ff1b"
+       stroke-width="2"
+       id="path1002" />
+    <path
+       d="M 2,22.5 H 5"
+       fill="#efef99"
+       fill-rule="evenodd"
+       stroke="#f8ff1b"
+       id="path1004" />
+    <path
+       d="M 2,24.5 H 5"
+       fill="#efef99"
+       fill-rule="evenodd"
+       stroke="#f8ff1b"
+       id="path1006" />
+    <path
+       d="M 2,26.5 H 5"
+       fill="#efef99"
+       fill-rule="evenodd"
+       stroke="#f8ff1b"
+       id="path1008" />
+    <g
+       fill="none"
+       id="g1034">
+      <path
+         d="m 14,17 h 2"
+         stroke="#6e97c4"
+         stroke-width="2"
+         id="path1012" />
+      <path
+         d="m 14,22.5 h 2"
+         stroke="#6e97c4"
+         id="path1014" />
+      <path
+         d="m 14,24.5 h 2"
+         stroke="#6e97c4"
+         id="path1016" />
+      <path
+         d="m 14,26.5 h 2"
+         stroke="#6e97c4"
+         id="path1018" />
+      <path
+         d="M 6,17 H 9.0000002"
+         stroke="#6e97c4"
+         stroke-width="2"
+         id="path1022" />
+      <path
+         d="M 6,22.5 H 9.0000002"
+         stroke="#6e97c4"
+         id="path1024" />
+      <path
+         d="M 6,24.5 H 9.0000002"
+         stroke="#6e97c4"
+         id="path1026" />
+      <path
+         d="M 6,26.5 H 9.0000002"
+         stroke="#6e97c4"
+         id="path1028" />
+      <path
+         d="m 10,17 h 3"
+         stroke="#f8ff1b"
+         stroke-width="2"
+         id="path1032" />
+    </g>
+    <path
+       d="m 10,22.5 h 3"
+       fill="#efef99"
+       fill-rule="evenodd"
+       stroke="#f8ff1b"
+       id="path1036" />
+    <path
+       d="m 10,24.5 h 3"
+       fill="#efef99"
+       fill-rule="evenodd"
+       stroke="#f8ff1b"
+       id="path1038" />
+    <path
+       d="m 10,26.5 h 3"
+       fill="#efef99"
+       fill-rule="evenodd"
+       stroke="#f8ff1b"
+       id="path1040" />
+  </g>
+</svg>

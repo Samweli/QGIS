@@ -53,7 +53,7 @@ QgsTemporalControllerWidget::QgsTemporalControllerWidget( QWidget *parent )
   setWidgetStateFromNavigationMode( mNavigationObject->navigationMode() );
   connect( mNavigationObject, &QgsTemporalNavigationObject::navigationModeChanged, this, &QgsTemporalControllerWidget::setWidgetStateFromNavigationMode );
   connect( mNavigationObject, &QgsTemporalNavigationObject::temporalExtentsChanged, this, &QgsTemporalControllerWidget::setDates );
-  connect( mNavigationObject, &QgsTemporalNavigationObject::temporalFrameDurationChanged, this, &QgsTemporalControllerWidget::setTimeStep );
+  connect( mNavigationObject, &QgsTemporalNavigationObject::temporalFrameDurationChanged, this, &QgsTemporalControllerWidget::setTimeStepWithBlocking );
   connect( mNavigationOff, &QPushButton::clicked, this, &QgsTemporalControllerWidget::mNavigationOff_clicked );
   connect( mNavigationFixedRange, &QPushButton::clicked, this, &QgsTemporalControllerWidget::mNavigationFixedRange_clicked );
   connect( mNavigationAnimated, &QPushButton::clicked, this, &QgsTemporalControllerWidget::mNavigationAnimated_clicked );
@@ -284,12 +284,17 @@ void QgsTemporalControllerWidget::updateFrameDuration()
     return;
 
   // save new settings into project
-  QgsProject::instance()->timeSettings()->setTimeStepUnit( static_cast< QgsUnitTypes::TemporalUnit>( mTimeStepsComboBox->currentData().toInt() ) );
-  QgsProject::instance()->timeSettings()->setTimeStep( mStepSpinBox->value() );
+  saveTimeStepToProject();
 
   mNavigationObject->setFrameDuration( QgsInterval( QgsProject::instance()->timeSettings()->timeStep(),
                                        QgsProject::instance()->timeSettings()->timeStepUnit() ) );
   mSlider->setRange( 0, mNavigationObject->totalFrameCount() - 1 );
+}
+
+void QgsTemporalControllerWidget::saveTimeStepToProject()
+{
+    QgsProject::instance()->timeSettings()->setTimeStepUnit( static_cast< QgsUnitTypes::TemporalUnit>( mTimeStepsComboBox->currentData().toInt() ) );
+    QgsProject::instance()->timeSettings()->setTimeStep( mStepSpinBox->value() );
 }
 
 void QgsTemporalControllerWidget::setWidgetStateFromProject()
@@ -515,51 +520,79 @@ void QgsTemporalControllerWidget::mRangeSetToAllLayersAction_triggered()
   saveRangeToProject();
 }
 
-void QgsTemporalControllerWidget::setTimeStep( const QgsInterval &timeStep )
+void QgsTemporalControllerWidget::setTimeStep( const QgsInterval &timeStep, bool blocking )
 {
   if ( ! timeStep.isValid() || timeStep.seconds() <= 0 )
     return;
 
-  // Search the time unit the most appropriate :
-  // the one that gives the smallest time step value for double spin box with round value (if possible) and/or the less signifiant digits
+    QMap<double, int> values = prepareTimeStepValues( timeStep );
+    double stepValue = values.firstKey();
+    int stepUnit = values.value( values.firstKey() );
 
-  int selectedUnit = -1;
-  int stringSize = std::numeric_limits<int>::max();
-  int precision = mStepSpinBox->decimals();
-  double selectedValue = std::numeric_limits<double>::max();
-  for ( int i = 0; i < mTimeStepsComboBox->count(); ++i )
-  {
-    QgsUnitTypes::TemporalUnit unit = static_cast<QgsUnitTypes::TemporalUnit>( mTimeStepsComboBox->itemData( i ).toInt() );
-    double value = timeStep.seconds() * QgsUnitTypes::fromUnitToUnitFactor( QgsUnitTypes::TemporalSeconds, unit );
-    QString string = QString::number( value, 'f', precision );
-    string.remove( QRegExp( "0+$" ) ); //remove trailing zero
-    string.remove( QRegExp( "[.]+$" ) ); //remove last point if present
-
-    if ( value >= 1
-         && string.size() <= stringSize // less significant digit than currently selected
-         && value < selectedValue ) // less than currently selected
-    {
-      selectedUnit = i;
-      selectedValue = value;
-      stringSize = string.size();
-    }
-    else if ( string != '0'
-              && string.size() < precision + 2 //round value (ex: 0.xx with precision=3)
-              && string.size() < stringSize ) //less significant digit than currently selected
-    {
-      selectedUnit = i ;
-      selectedValue = value ;
-      stringSize = string.size();
-    }
-  }
-
-  if ( selectedUnit >= 0 )
-  {
-    mStepSpinBox->setValue( selectedValue );
-    mTimeStepsComboBox->setCurrentIndex( selectedUnit );
-  }
+   if ( !values.isEmpty() )
+   {
+       if( blocking ){
+           whileBlocking( mStepSpinBox )->setValue( stepValue );
+           whileBlocking( mTimeStepsComboBox )->setCurrentIndex( stepUnit );
+           saveTimeStepToProject();
+           return;
+       }else{
+           mStepSpinBox->setValue( stepValue );
+           mTimeStepsComboBox->setCurrentIndex( stepUnit );
+       }
+   }
 
   updateFrameDuration();
+}
+
+void QgsTemporalControllerWidget::setTimeStepWithBlocking( const QgsInterval &timeStep )
+{
+    setTimeStep( timeStep, true );
+}
+
+
+QMap<double, int> QgsTemporalControllerWidget::prepareTimeStepValues( const QgsInterval &timeStep )
+{
+    // Search the time unit the most appropriate :
+    // the one that gives the smallest time step value for double spin box with round value (if possible) and/or the less signifiant digits
+
+    int selectedUnit = -1;
+    int stringSize = std::numeric_limits<int>::max();
+    int precision = mStepSpinBox->decimals();
+    double selectedValue = std::numeric_limits<double>::max();
+    for ( int i = 0; i < mTimeStepsComboBox->count(); ++i )
+    {
+      QgsUnitTypes::TemporalUnit unit = static_cast<QgsUnitTypes::TemporalUnit>( mTimeStepsComboBox->itemData( i ).toInt() );
+      double value = timeStep.seconds() * QgsUnitTypes::fromUnitToUnitFactor( QgsUnitTypes::TemporalSeconds, unit );
+      QString string = QString::number( value, 'f', precision );
+      string.remove( QRegExp( "0+$" ) ); //remove trailing zero
+      string.remove( QRegExp( "[.]+$" ) ); //remove last point if present
+
+      if ( value >= 1
+           && string.size() <= stringSize // less significant digit than currently selected
+           && value < selectedValue ) // less than currently selected
+      {
+        selectedUnit = i;
+        selectedValue = value;
+        stringSize = string.size();
+      }
+      else if ( string != '0'
+                && string.size() < precision + 2 //round value (ex: 0.xx with precision=3)
+                && string.size() < stringSize ) //less significant digit than currently selected
+      {
+        selectedUnit = i ;
+        selectedValue = value ;
+        stringSize = string.size();
+      }
+    }
+
+    QMap<double, int> map;
+    if ( selectedUnit >= 0 )
+    {
+        map.insert( selectedValue, selectedUnit);
+    }
+
+    return map;
 }
 
 void QgsTemporalControllerWidget::mRangeSetToProjectAction_triggered()

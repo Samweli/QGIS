@@ -8588,10 +8588,10 @@ void QgisApp::fieldCalculator()
 
 void QgisApp::attributeTable( QgsAttributeTableFilterModel::FilterMode filter )
 {
-  QgsVectorLayer *myLayer = qobject_cast<QgsVectorLayer *>( activeLayer() );
+  QgsMapLayer *myLayer = activeLayer();
   if ( !myLayer )
   {
-    return;
+      return;
   }
 
   QgsAttributeTableDialog *mDialog = new QgsAttributeTableDialog( myLayer, filter );
@@ -14731,7 +14731,7 @@ void QgisApp::activateDeactivateLayerRelatedActions( QgsMapLayer *layer )
       mActionZoomActualSize->setEnabled( true );
       mActionZoomToLayer->setEnabled( true );
       mActionZoomToSelected->setEnabled( false );
-      mActionOpenTable->setEnabled( false );
+      mActionOpenTable->setEnabled( true );
       mActionSelectAll->setEnabled( false );
       mActionReselect->setEnabled( false );
       mActionInvertSelection->setEnabled( false );

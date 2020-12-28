@@ -493,6 +493,7 @@ set(QGIS_GUI_SRCS
   qgsmaplayeractionregistry.cpp
   qgsmaplayercombobox.cpp
   qgsmaplayerconfigwidgetfactory.cpp
+  qgsproviderconfigwidgetfactory.cpp
   qgsmaplayerloadstyledialog.cpp
   qgsmaplayerstylecategoriesmodel.cpp
   qgsmaplayerstyleguiutils.cpp
@@ -513,6 +514,7 @@ set(QGIS_GUI_SRCS
   qgsmaptoolpan.cpp
   qgsmaptoolzoom.cpp
   qgsmaplayerconfigwidget.cpp
+  qgsproviderconfigwidget.cpp
   qgsmaterialsettingswidget.cpp
   qgsmenuheader.cpp
   qgsmessagebar.cpp
@@ -792,6 +794,8 @@ set(QGIS_GUI_HDRS
   qgsprojectstorageguiregistry.h
   qgspropertyassistantwidget.h
   qgspropertyoverridebutton.h
+  qgsproviderconfigwidget.h
+  qgsproviderconfigwidgetfactory.h
   qgsproviderconnectioncombobox.h
   qgsproviderguimetadata.h
   qgsproviderguiregistry.h

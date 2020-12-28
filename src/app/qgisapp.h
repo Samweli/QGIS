@@ -84,6 +84,7 @@ class QgsPointCloudLayer;
 class QgsPointXY;
 class QgsPrintLayout;
 class QgsProviderRegistry;
+class QgsProviderConfigWidgetFactory;
 class QgsPythonUtils;
 class QgsRasterLayer;
 class QgsRectangle;
@@ -728,6 +729,12 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
 
     //! Unregister a previously registered tab in the layer properties dialog
     void unregisterMapLayerPropertiesFactory( QgsMapLayerConfigWidgetFactory *factory );
+
+    //! Register a new tab in the data source manager dialog
+    void registerProviderFactory( QgsProviderConfigWidgetFactory *factory );
+
+    //! Unregister a previously data source manager dialog provider
+    void unregisterProviderFactory( QgsProviderConfigWidgetFactory *factory );
 
     //! Register a new tab in the options dialog
     void registerOptionsWidgetFactory( QgsOptionsWidgetFactory *factory );
@@ -2631,6 +2638,7 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
 #endif
 
     QList<QgsMapLayerConfigWidgetFactory *> mMapLayerPanelFactories;
+    QList<QgsProviderConfigWidgetFactory *> mProviderPanelFactories;
     QList<QPointer<QgsOptionsWidgetFactory>> mOptionsWidgetFactories;
     QList<QPointer<QgsOptionsWidgetFactory>> mProjectPropertiesWidgetFactories;
 

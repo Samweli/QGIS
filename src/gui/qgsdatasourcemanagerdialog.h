@@ -34,6 +34,7 @@ class QgsMapCanvas;
 class QgsAbstractDataSourceWidget;
 class QgsBrowserGuiModel;
 class QgsMessageBar;
+class QgsProviderConfigWidgetFactory;
 
 /**
  * \ingroup gui
@@ -69,6 +70,8 @@ class GUI_EXPORT QgsDataSourceManagerDialog : public QgsOptionsDialogBase, priva
 
     //! Returns the dialog's message bar
     QgsMessageBar *messageBar() const;
+
+    void addProviderFactory( QgsProviderConfigWidgetFactory *factory );
 
   public slots:
 

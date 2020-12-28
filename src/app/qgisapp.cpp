@@ -2445,6 +2445,11 @@ void QgisApp::dataSourceManager( const QString &pageName )
     connect( this, &QgisApp::newProject, mDataSourceManagerDialog, &QgsDataSourceManagerDialog::updateProjectHome );
     connect( mDataSourceManagerDialog, &QgsDataSourceManagerDialog::openFile, this, &QgisApp::openFile );
 
+    for ( QgsProviderConfigWidgetFactory *factory : qgis::as_const( mProviderPanelFactories ) )
+    {
+      mDataSourceManagerDialog->addProviderFactory( factory );
+    }
+
   }
   else
   {
@@ -12816,6 +12821,16 @@ void QgisApp::unregisterMapLayerPropertiesFactory( QgsMapLayerConfigWidgetFactor
   mMapLayerPanelFactories.removeAll( factory );
   if ( mMapStyleWidget )
     mMapStyleWidget->setPageFactories( mMapLayerPanelFactories );
+}
+
+void QgisApp::registerProviderFactory( QgsProviderConfigWidgetFactory *factory )
+{
+  mProviderPanelFactories << factory;
+}
+
+void QgisApp::unregisterProviderFactory( QgsProviderConfigWidgetFactory *factory )
+{
+  mProviderPanelFactories.removeAll( factory );
 }
 
 void QgisApp::registerOptionsWidgetFactory( QgsOptionsWidgetFactory *factory )

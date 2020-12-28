@@ -24,6 +24,7 @@
 #include "qgssourceselectprovider.h"
 #include "qgssourceselectproviderregistry.h"
 #include "qgsabstractdatasourcewidget.h"
+#include "qgsproviderconfigwidgetfactory.h"
 #include "qgsmapcanvas.h"
 #include "qgsmessagelog.h"
 #include "qgsmessagebar.h"
@@ -148,18 +149,22 @@ void QgsDataSourceManagerDialog::vectorLayersAdded( const QStringList &layerQStr
 void QgsDataSourceManagerDialog::addProviderDialog( QgsAbstractDataSourceWidget *dlg, const QString &providerKey, const QString &providerName, const QIcon &icon, const QString &toolTip )
 {
   mPageNames.append( providerKey );
-  ui->mOptionsStackedWidget->addWidget( dlg );
+  if ( dlg )
+      ui->mOptionsStackedWidget->addWidget( dlg );
   QListWidgetItem *layerItem = new QListWidgetItem( providerName, ui->mOptionsListWidget );
   layerItem->setToolTip( toolTip.isEmpty() ? tr( "Add %1 layer" ).arg( providerName ) : toolTip );
   layerItem->setIcon( icon );
   // Set crs and extent from canvas
-  if ( mMapCanvas )
+  if ( mMapCanvas && dlg )
   {
     dlg->setMapCanvas( mMapCanvas );
   }
-  connect( dlg, &QgsAbstractDataSourceWidget::rejected, this, &QgsDataSourceManagerDialog::reject );
-  connect( dlg, &QgsAbstractDataSourceWidget::accepted, this, &QgsDataSourceManagerDialog::accept );
-  makeConnections( dlg, providerKey );
+  if ( dlg ){
+      connect( dlg, &QgsAbstractDataSourceWidget::rejected, this, &QgsDataSourceManagerDialog::reject );
+      connect( dlg, &QgsAbstractDataSourceWidget::accepted, this, &QgsDataSourceManagerDialog::accept );
+      makeConnections( dlg, providerKey );
+  }
+
 }
 
 void QgsDataSourceManagerDialog::makeConnections( QgsAbstractDataSourceWidget *dlg, const QString &providerKey )
@@ -210,4 +215,11 @@ void QgsDataSourceManagerDialog::showEvent( QShowEvent *e )
   ui->mOptionsStackedWidget->currentWidget()->show();
   QgsOptionsDialogBase::showEvent( e );
   resizeAlltabs( ui->mOptionsStackedWidget->currentIndex() );
+}
+
+void QgsDataSourceManagerDialog::addProviderFactory( QgsProviderConfigWidgetFactory *factory )
+{
+  QgsAbstractDataSourceWidget *dlg = factory->createDataSourceWidget( this );
+
+  addProviderDialog( dlg, factory->title(), factory->title(), factory->icon() );
 }

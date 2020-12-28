@@ -60,6 +60,7 @@ class QgsVectorLayer;
 class QgsVectorLayerTools;
 class QgsVectorTileLayer;
 class QgsPointCloudLayer;
+class QgsProviderConfigWidgetFactory;
 class QgsOptionsWidgetFactory;
 class QgsLocatorFilter;
 class QgsStatusBar;
@@ -998,6 +999,24 @@ class GUI_EXPORT QgisInterface : public QObject
      * \since QGIS 2.16
     */
     virtual void unregisterMapLayerConfigWidgetFactory( QgsMapLayerConfigWidgetFactory *factory ) = 0;
+
+    /**
+     * Register a new tab in the map layer properties dialog.
+     * \note Ownership of the factory is not transferred, and the factory must
+     *       be unregistered when plugin is unloaded.
+     * \see QgsProviderConfigWidgetFactory
+     * \see unregisterProviderConfigWidgetFactory()
+     * \since QGIS 2.16
+     */
+    virtual void registerProviderFactory( QgsProviderConfigWidgetFactory *factory ) = 0;
+
+    /**
+     * Unregister a previously registered tab in the map layer properties dialog.
+     * \see QgsProviderConfigWidgetFactory
+     * \see registerProviderConfigWidgetFactory()
+     * \since QGIS 2.16
+    */
+    virtual void unregisterProviderFactory( QgsProviderConfigWidgetFactory *factory ) = 0;
 
     /**
      * Register a new tab in the options dialog.

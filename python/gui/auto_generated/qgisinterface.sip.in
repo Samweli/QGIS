@@ -1183,6 +1183,33 @@ Unregister a previously registered tab in the map layer properties dialog.
 .. versionadded:: 2.16
 %End
 
+    virtual void registerProviderFactory( QgsProviderConfigWidgetFactory *factory ) = 0;
+%Docstring
+Register a new tab in the map layer properties dialog.
+
+.. note::
+
+   Ownership of the factory is not transferred, and the factory must
+   be unregistered when plugin is unloaded.
+
+.. seealso:: :py:class:`QgsProviderConfigWidgetFactory`
+
+.. seealso:: :py:func:`unregisterProviderConfigWidgetFactory`
+
+.. versionadded:: 2.16
+%End
+
+    virtual void unregisterProviderFactory( QgsProviderConfigWidgetFactory *factory ) = 0;
+%Docstring
+Unregister a previously registered tab in the map layer properties dialog.
+
+.. seealso:: :py:class:`QgsProviderConfigWidgetFactory`
+
+.. seealso:: :py:func:`registerProviderConfigWidgetFactory`
+
+.. versionadded:: 2.16
+%End
+
     virtual void registerOptionsWidgetFactory( QgsOptionsWidgetFactory *factory ) = 0;
 %Docstring
 Register a new tab in the options dialog.

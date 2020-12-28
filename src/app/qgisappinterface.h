@@ -145,6 +145,8 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     bool unregisterMainWindowAction( QAction *action ) override;
     void registerMapLayerConfigWidgetFactory( QgsMapLayerConfigWidgetFactory *factory ) override;
     void unregisterMapLayerConfigWidgetFactory( QgsMapLayerConfigWidgetFactory *factory ) override;
+    void registerProviderFactory( QgsProviderConfigWidgetFactory *factory ) override;
+    void unregisterProviderFactory( QgsProviderConfigWidgetFactory *factory ) override;
     void registerOptionsWidgetFactory( QgsOptionsWidgetFactory *factory ) override;
     void unregisterOptionsWidgetFactory( QgsOptionsWidgetFactory *factory ) override;
     void registerProjectPropertiesWidgetFactory( QgsOptionsWidgetFactory *factory ) override;

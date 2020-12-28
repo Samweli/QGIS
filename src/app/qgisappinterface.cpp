@@ -547,6 +547,17 @@ void QgisAppInterface::unregisterMapLayerConfigWidgetFactory( QgsMapLayerConfigW
   qgis->unregisterMapLayerPropertiesFactory( factory );
 }
 
+void QgisAppInterface::registerProviderFactory( QgsProviderConfigWidgetFactory *factory )
+{
+  qgis->registerProviderFactory( factory );
+}
+
+void QgisAppInterface::unregisterProviderFactory( QgsProviderConfigWidgetFactory *factory )
+{
+  qgis->unregisterProviderFactory( factory );
+}
+
+
 void QgisAppInterface::registerOptionsWidgetFactory( QgsOptionsWidgetFactory *factory )
 {
   qgis->registerOptionsWidgetFactory( factory );
